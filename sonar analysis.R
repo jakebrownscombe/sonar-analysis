@@ -140,8 +140,7 @@ tm_shape(osm_stoney)+tm_rgb()+tm_shape(sidescan.mosaic) + tm_rgb(r=1, g=2, b=3, 
   tm_shape(hab.poly)+tm_polygons(col="id", n=4, alpha=0.6, palette=c("forestgreen","darkslategray","sienna","bisque3"), style="fixed", 
                                  breaks=c(0.5,1.5,2.5,4.5,5.5), labels=c("Vegetation","Bedrock","Fines","Boulders"), title="Habitat")+
   tm_layout(legend.bg.color="white", legend.text.size=1, legend.title.size = 2, legend.frame="grey60", 
-            legend.frame.lwd = 2, frame="grey60", frame.lwd=3, fontfamily = "Arial")+
-  tm_scale_bar(text.color = "white", text.size = 1)
+            legend.frame.lwd = 2, frame="grey60", frame.lwd=3, fontfamily = "Arial")
 
 
 
@@ -151,8 +150,7 @@ tm_shape(osm_stoney)+tm_rgb()+tm_shape(sidescan.mosaic) + tm_rgb(r=1, g=2, b=3, 
   tm_raster(n=4, alpha=0.6, palette=c("forestgreen","darkslategray","sienna","bisque3"), style="fixed", 
             breaks=c(0.5,1.5,2.5,4.5,5.5), labels=c("Vegetation","Bedrock","Fines","Boulders"), title="Habitat")+
   tm_layout(legend.bg.color="white", legend.text.size=1, legend.title.size = 2, legend.frame="grey60", 
-            legend.frame.lwd = 2, frame="grey60", frame.lwd=3, fontfamily = "Arial")+
-  tm_scale_bar(text.color = "white", text.size = 1)
+            legend.frame.lwd = 2, frame="grey60", frame.lwd=3, fontfamily = "Arial")
 
 
 
@@ -254,10 +252,10 @@ bio.raster.df <- as.data.frame(bio.raster, xy=TRUE)
 hab.bio.df.comb <- merge(hab.bio.df, bio.raster.df, by=c("x","y"), all.x=TRUE)
 hab.bio.df.comb <- hab.bio.df.comb %>% dplyr::select(-ID.x, -ID.y) %>% filter(!is.na(habitat))
 hab.bio.df.comb$habitat.class <- hab.classes$habitat.class[match(hab.bio.df.comb$habitat, hab.classes$hab.n)]
-head(hab.bio.df.comb)
+head(hab.bio.df.comb) #all data in same object for plotting
 
 
-#all three 
+#all three variables combined - need to interpolate 
 hab.bio.df.comb <- hab.bio.df.comb %>% filter(!is.na(BioVolume))
 bio.interp <- interp(hab.bio.df.comb$depth.m, hab.bio.df.comb$Hardness, hab.bio.df.comb$BioVolume)
 bio.interp.df <- bio.interp[[3]]
@@ -269,7 +267,7 @@ head(bio.interp.df)
 
 
 
-#all plots
+#plots
 ggplot(hab.bio.df.comb, aes(depth.m, BioVolume))+geom_point()+geom_smooth(col="red")+
   theme_bw()+xlab("Water Depth (m)")+ylab("Vegetation Bio-volume (proportion)")+
   
